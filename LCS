@@ -1,0 +1,80 @@
+import java.util.Scanner;
+
+public class LCS {
+
+    // Function to find LCS length and create DP table
+    static int[][] LCS_LENGTH(String X, String Y) {
+        int m = X.length();
+        int n = Y.length();
+
+        int[][] dp = new int[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+
+                if (X.charAt(i - 1) == Y.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        return dp;
+    }
+
+    // Function to reconstruct the actual LCS
+    static String BUILD_LCS(String X, String Y, int[][] dp) {
+
+        int i = X.length();
+        int j = Y.length();
+
+        StringBuilder result = new StringBuilder();
+
+        while (i > 0 && j > 0) {
+
+            if (X.charAt(i - 1) == Y.charAt(j - 1)) {
+                result.append(X.charAt(i - 1));
+                i--;
+                j--;
+            } 
+            else if (dp[i - 1][j] >= dp[i][j - 1]) {
+                i--;
+            } 
+            else {
+                j--;
+            }
+        }
+
+        return result.reverse().toString();
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter first string: ");
+        String X = sc.nextLine();
+
+        System.out.print("Enter second string: ");
+        String Y = sc.nextLine();
+
+        int[][] dp = LCS_LENGTH(X, Y);
+
+        String lcs = BUILD_LCS(X, Y, dp);
+
+        System.out.println("\nLength of LCS: " + dp[X.length()][Y.length()]);
+        System.out.println("Longest Common Subsequence: " + lcs);
+
+        System.out.println("\nDP Table:");
+
+        for (int i = 0; i <= X.length(); i++) {
+            for (int j = 0; j <= Y.length(); j++) {
+                System.out.print(dp[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        sc.close();
+    }
+}
