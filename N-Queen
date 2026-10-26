@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int board[20], n;
+
+int is_safe(int row, int col)
+{
+    int i;
+
+    for (i = 1; i < row; i++)
+    {
+        if (board[i] == col)
+            return 0;
+
+        if (abs(board[i] - col) == abs(i - row))
+            return 0;
+    }
+
+    return 1;
+}
+
+void nqueen(int row)
+{
+    int col;
+
+    if (row > n)
+    {
+        for (int i = 1; i <= n; i++)
+            printf("%d ", board[i]);
+
+        printf("\n");
+        return;
+    }
+
+    for (col = 1; col <= n; col++)
+    {
+        if (is_safe(row, col))
+        {
+            board[row] = col;
+            nqueen(row + 1);
+            board[row] = 0;
+        }
+    }
+}
+
+int main()
+{
+    printf("Enter N: ");
+    scanf("%d", &n);
+
+    nqueen(1);
+
+    return 0;
+}
